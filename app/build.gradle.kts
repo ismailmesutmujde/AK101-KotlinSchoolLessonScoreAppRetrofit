@@ -7,6 +7,10 @@ android {
     namespace = "com.ismailmesutmujde.kotlinschoollessonscoreappretrofit"
     compileSdk = 34
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.ismailmesutmujde.kotlinschoollessonscoreappretrofit"
         minSdk = 24
