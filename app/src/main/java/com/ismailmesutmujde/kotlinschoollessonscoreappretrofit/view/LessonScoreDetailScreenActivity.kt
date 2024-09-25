@@ -8,13 +8,21 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.ismailmesutmujde.kotlinschoollessonscoreappretrofit.R
+import com.ismailmesutmujde.kotlinschoollessonscoreappretrofit.dao.LessonScoresDaoInterface
 import com.ismailmesutmujde.kotlinschoollessonscoreappretrofit.databinding.ActivityLessonScoreDetailScreenBinding
+import com.ismailmesutmujde.kotlinschoollessonscoreappretrofit.model.CRUDResponse
 import com.ismailmesutmujde.kotlinschoollessonscoreappretrofit.model.LessonScores
+import com.ismailmesutmujde.kotlinschoollessonscoreappretrofit.service.ApiUtils
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class LessonScoreDetailScreenActivity : AppCompatActivity() {
     private lateinit var bindingLessonScoreDetailScreen : ActivityLessonScoreDetailScreenBinding
 
     private lateinit var lessonScore : LessonScores
+    private lateinit var lsdi : LessonScoresDaoInterface
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingLessonScoreDetailScreen = ActivityLessonScoreDetailScreenBinding.inflate(layoutInflater)
@@ -23,6 +31,8 @@ class LessonScoreDetailScreenActivity : AppCompatActivity() {
 
         bindingLessonScoreDetailScreen.toolbarLessonScoreDetail.title = "Lesson Score Detail"
         setSupportActionBar(bindingLessonScoreDetailScreen.toolbarLessonScoreDetail)
+
+        lsdi = ApiUtils.getLessonScoresDaoInterface()
 
         lessonScore = intent.getSerializableExtra("obj") as LessonScores
 
@@ -43,6 +53,19 @@ class LessonScoreDetailScreenActivity : AppCompatActivity() {
                 Snackbar.make(bindingLessonScoreDetailScreen.toolbarLessonScoreDetail, "Delete it?",
                     Snackbar.LENGTH_SHORT)
                     .setAction("YES") {
+                        lsdi.deleteLessonScores(lessonScore.lesson_id).enqueue(object: Callback<CRUDResponse>{
+                            override fun onResponse(
+                                call: Call<CRUDResponse>,
+                                response: Response<CRUDResponse>
+                            ) {
+
+                            }
+
+                            override fun onFailure(call: Call<CRUDResponse>, t: Throwable) {
+
+                            }
+
+                        })
                         startActivity(Intent(this@LessonScoreDetailScreenActivity, MainScreenActivity::class.java))
                         finish()
                     }.show()
@@ -72,7 +95,19 @@ class LessonScoreDetailScreenActivity : AppCompatActivity() {
                 }
 
 
+                lsdi.updateLessonScores(lessonScore.lesson_id,lesson_name, score1.toInt(), score2.toInt()).enqueue(object : Callback<CRUDResponse>{
+                    override fun onResponse(
+                        call: Call<CRUDResponse>,
+                        response: Response<CRUDResponse>
+                    ) {
 
+                    }
+
+                    override fun onFailure(call: Call<CRUDResponse>, t: Throwable) {
+
+                    }
+
+                })
                 val intent = Intent(this@LessonScoreDetailScreenActivity, MainScreenActivity::class.java)
                 startActivity(intent)
                 finish()
